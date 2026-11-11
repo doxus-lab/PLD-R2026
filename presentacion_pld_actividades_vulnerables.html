@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacitación en Materia de PLD - Actividades Vulnerables (BMA / AREIA / Ramos Castillo)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons para iconografía clara y moderna -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf3f3',
+              100: '#fbe8e8',
+              200: '#f7d4d4',
+              700: '#8e1b24',
+              800: '#73141b',
+              900: '#580e14',
+              gold: '#c5a059',
+              dark: '#161922',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Estilos personalizados para transiciones fluidas de diapositivas */
+    .slide-enter {
+      opacity: 0;
+      transform: translateY(12px) scale(0.99);
+    }
+    .slide-active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* Ocultar barra de scroll en modo slide si no es necesaria */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .dark .custom-scroll::-webkit-scrollbar-thumb {
+      background: #374151;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-900 text-slate-100 font-sans flex flex-col overflow-hidden antialiased select-none sm:select-auto">
+
+  <!-- BARRA SUPERIOR DE CONTROL -->
+  <header class="h-16 bg-slate-950/80 backdrop-blur border-b border-slate-800 px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-700 to-brand-900 border border-brand-gold/40 flex items-center justify-center font-bold text-brand-gold text-lg shadow-md">
+        <i class="ph-bold ph-scales"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-semibold tracking-wide text-slate-200 uppercase">Capacitación PLD • Actividades Vulnerables</h1>
+        <p class="text-[11px] text-slate-400 hidden sm:block">Reforma LFPIORPI 2025-2026 | BMA • AREIA • Ramos Castillo</p>
+      </div>
+    </div>
+
+    <!-- Controles de navegación y vista -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Selector de vista -->
+      <div class="bg-slate-900 border border-slate-700 p-0.5 rounded-lg flex text-xs">
+        <button id="viewSlideBtn" onclick="setViewMode('slide')" class="px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 bg-brand-800 text-white transition-all shadow-sm">
+          <i class="ph-bold ph-presentation"></i> <span class="hidden md:inline">Presentación</span>
+        </button>
+        <button id="viewDocBtn" onclick="setViewMode('doc')" class="px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition-all">
+          <i class="ph-bold ph-article"></i> <span class="hidden md:inline">Documento</span>
+        </button>
+      </div>
+
+      <!-- Buscador rápido modal button -->
+      <button onclick="toggleModal('searchModal')" class="p-2 text-slate-400 hover:text-brand-gold bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-lg transition" title="Índice y Búsqueda (Presiona Espacio o /)">
+        <i class="ph-bold ph-magnifying-glass text-lg"></i>
+      </button>
+
+      <!-- Pantalla completa -->
+      <button onclick="toggleFullScreen()" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition hidden sm:block" title="Pantalla Completa (F11)">
+        <i class="ph-bold ph-arrows-out text-lg" id="fsIcon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="flex-1 relative overflow-hidden flex flex-col bg-slate-950">
+
+    <!-- ========================================== -->
+    <!-- MODO 1: DIAPOSITIVAS INTERACTIVAS          -->
+    <!-- ========================================== -->
+    <div id="slideViewport" class="flex-1 flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8 overflow-hidden">
+      <!-- Tarjeta de Diapositiva Principal -->
+      <div class="w-full max-w-6xl h-full max-h-[820px] bg-slate-900/95 border border-slate-800/90 rounded-2xl shadow-2xl flex flex-col overflow-hidden relative backdrop-blur-xl">
+        
+        <!-- Header de la lámina -->
+        <div class="px-6 py-3.5 border-b border-slate-800/70 flex items-center justify-between bg-slate-950/40">
+          <div class="flex items-center gap-2">
+            <span id="slideTag" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-brand-900/80 text-brand-gold border border-brand-gold/30">Módulo</span>
+            <span id="slideSubtitle" class="text-xs text-slate-400 font-medium hidden md:inline"></span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+            <span id="slideCounter">1 / 20</span>
+          </div>
+        </div>
+
+        <!-- Contenido dinámico del slide -->
+        <div id="slideContent" class="flex-1 overflow-y-auto custom-scroll p-6 sm:p-10 flex flex-col justify-center">
+          <!-- Inyectado vía JavaScript -->
+        </div>
+
+        <!-- Barra inferior del slide (Progreso & Navegación rápida) -->
+        <div class="h-1.5 bg-slate-800 w-full overflow-hidden">
+          <div id="slideProgressBar" class="h-full bg-gradient-to-r from-brand-700 via-brand-gold to-brand-800 transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODO 2: DOCUMENTO COMPLETO CONTINUO         -->
+    <!-- ========================================== -->
+    <div id="docViewport" class="hidden flex-1 overflow-y-auto custom-scroll px-4 sm:px-8 py-8 max-w-5xl mx-auto w-full space-y-12">
+      <!-- Inyectado automáticamente para estudio/impresión -->
+    </div>
+
+  </main>
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR (Solo en Modo Slide) -->
+  <footer id="slideFooterControls" class="h-16 bg-slate-950 border-t border-slate-800/80 px-4 sm:px-8 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-2 text-xs text-slate-400">
+      <span class="hidden sm:inline">Usa <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">←</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">→</kbd> o rueda del ratón</span>
+      <span class="sm:hidden text-[11px]">Desliza o usa flechas</span>
+    </div>
+
+    <!-- Botones de Salto rápido de temas -->
+    <div class="hidden lg:flex items-center gap-1.5">
+      <button onclick="goToSlide(0)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Inicio</button>
+      <button onclick="goToSlide(3)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Umbrales</button>
+      <button onclick="goToSlide(7)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Obligaciones</button>
+      <button onclick="goToSlide(9)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Beneficiario C.</button>
+      <button onclick="goToSlide(12)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Avisos</button>
+      <button onclick="goToSlide(15)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Efectivo</button>
+      <button onclick="goToSlide(17)" class="text-xs px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800">Visitas SAT</button>
+    </div>
+
+    <!-- Botones Anterior / Siguiente -->
+    <div class="flex items-center gap-2">
+      <button id="prevBtn" onclick="prevSlide()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-medium text-xs sm:text-sm flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed transition">
+        <i class="ph-bold ph-caret-left text-base"></i> Anterior
+      </button>
+      <button id="nextBtn" onclick="nextSlide()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-700 to-brand-800 hover:from-brand-800 hover:to-brand-900 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-900/40 disabled:opacity-30 disabled:cursor-not-allowed transition">
+        Siguiente <i class="ph-bold ph-caret-right text-base"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- MODAL: ÍNDICE Y BÚSQUEDA RÁPIDA -->
+  <div id="searchModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center gap-3">
+        <i class="ph-bold ph-magnifying-glass text-slate-400 text-xl"></i>
+        <input type="text" id="searchInput" placeholder="Buscar concepto (ej: Notarios, Beneficiario, 24 horas, UMA, Multas)..." class="bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none flex-1" oninput="filterSearch()">
+        <button onclick="toggleModal('searchModal')" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+      <div id="searchResults" class="overflow-y-auto p-3 space-y-1 custom-scroll max-h-[60vh]">
+        <!-- Inyectado vía JS -->
+      </div>
+      <div class="p-3 bg-slate-950/60 border-t border-slate-800/80 text-[11px] text-slate-400 text-center">
+        Selecciona un tema para saltar directamente a la lámina correspondiente
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE DATOS Y LÓGICA DE LA PRESENTACIÓN -->
+  <script>
+    // ==========================================
+    // ESTRUCTURA SINTETIZADA DE CONTENIDOS (75 láminas condensadas en 20 bloques clave sin pérdidas sustanciales)
+    // ==========================================
+    const slidesData = [
+      {
+        tag: "Portada",
+        title: "Capacitación en Materia de PLD para Actividades Vulnerables",
+        subtitle: "Reforma a la LFPIORPI • Ley, Reglamento y Reglas de Carácter General",
+        content: `
+          <div class="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto my-auto py-4">
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs tracking-wider font-semibold text-brand-gold uppercase">
+              <span class="px-3 py-1 bg-brand-950/80 rounded-full border border-brand-gold/30">Barra Mexicana de Abogados (BMA)</span>
+              <span class="px-3 py-1 bg-brand-950/80 rounded-full border border-brand-gold/30">AREIA Abogados</span>
+              <span class="px-3 py-1 bg-brand-950/80 rounded-full border border-brand-gold/30">Ramos Castillo Abogados</span>
+            </div>
+            
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              Régimen Integral de Prevención de Lavado de Dinero (PLD)
+            </h2>
+            <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+              Guía técnica, operativa y sancionatoria sobre las nuevas obligaciones para sujetos que realizan Actividades Vulnerables conforme a las reformas 2025-2026.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full pt-4 text-left">
+              <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-brand-gold/40 transition">
+                <p class="text-xs font-bold text-brand-gold uppercase">Ponente</p>
+                <h4 class="text-sm font-semibold text-white">Lic. Michelle Arellano</h4>
+                <p class="text-xs text-slate-400 mt-1">Socia Fundadora AREIA Abogados • Auditora Certificada CNBV y UIF en PLD • Coord. Comisión PLD BMA Jalisco.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 hover:border-brand-gold/40 transition">
+                <p class="text-xs font-bold text-brand-gold uppercase">Ponente</p>
+                <h4 class="text-sm font-semibold text-white">Lic. Mónica Cárdenas</h4>
+                <p class="text-xs text-slate-400 mt-1">Asociada en Ramos Castillo Abogados • Certificada por la UIF en Actividades Vulnerables • Coord. Comisión PLD BMA Jalisco.</p>
+              </div>
+            </div>
+
+            <button onclick="goToSlide(1)" class="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-700 to-brand-800 text-white font-medium text-sm flex items-center gap-2 hover:from-brand-800 hover:to-brand-900 transition shadow-lg">
+              Iniciar Presentación <i class="ph-bold ph-arrow-right"></i>
+            </button>
+          </div>
+        `
+      },
+      {
+        tag: "Marco Normativo",
+        title: "Marco Jurídico Vigente y Objeto de la LFPIORPI",
+        subtitle: "Láminas 3 y 4 • Calendario de Reformas y Fundamento Jurídico",
+        content: `
+          <div class="space-y-6 my-auto">
+            <!-- Timeline de reformas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-xl bg-slate-800/70 border border-slate-700 relative overflow-hidden">
+                <div class="absolute top-0 right-0 transform translate-x-2 -translate-y-2 w-12 h-12 bg-brand-700/20 rounded-full blur"></div>
+                <div class="text-xs font-bold text-brand-gold uppercase tracking-wider">Ley Antilavado</div>
+                <div class="text-xl font-bold text-white mt-1">LFPIORPI</div>
+                <p class="text-xs text-slate-400 mt-2">Última reforma: <strong>16 de julio 2025</strong></p>
+                <p class="text-xs text-emerald-400 font-medium">Entrada en vigor: 17 de julio 2025</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-800/70 border border-slate-700 relative overflow-hidden">
+                <div class="text-xs font-bold text-brand-gold uppercase tracking-wider">Reglamento</div>
+                <div class="text-xl font-bold text-white mt-1">Reglamento LFPIORPI</div>
+                <p class="text-xs text-slate-400 mt-2">Última reforma: <strong>27 de marzo 2026</strong></p>
+                <p class="text-xs text-emerald-400 font-medium">Entrada en vigor: 28 de marzo 2026</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-800/70 border border-slate-700 relative overflow-hidden">
+                <div class="text-xs font-bold text-brand-gold uppercase tracking-wider">Disposiciones Administrativas</div>
+                <div class="text-xl font-bold text-white mt-1">Reglas de C. General</div>
+                <p class="text-xs text-slate-400 mt-2">Última reforma: <strong>7 de agosto 2026</strong></p>
+                <p class="text-xs text-amber-400 font-medium">Vigor: 30 de noviembre 2026 (con excepciones escalonadas)</p>
+              </div>
+            </div>
+
+            <!-- Objeto de la ley -->
+            <div class="p-5 rounded-2xl bg-gradient-to-r from-brand-950/60 to-slate-900 border border-brand-900/60 flex flex-col md:flex-row gap-5 items-start">
+              <div class="w-12 h-12 rounded-xl bg-brand-800/60 flex items-center justify-center text-brand-gold text-2xl shrink-0">
+                <i class="ph-bold ph-shield-check"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-white">Objeto Primordial de la Ley</h4>
+                <p class="text-sm text-slate-300 mt-1.5 leading-relaxed">
+                  Proteger el <strong>sistema financiero y la economía nacional</strong>, estableciendo medidas y procedimientos interinstitucionales para prevenir y detectar actos u operaciones con recursos de procedencia ilícita (ORPI), recabar pruebas para investigar/perseguir los delitos relacionados y desarticular las estructuras patrimoniales y financieras de las organizaciones delictivas.
+                </p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Conceptos Fundamentales",
+        title: "¿Qué es Lavado de Dinero y Actividades Vulnerables?",
+        subtitle: "Láminas 6, 7 y 8 • Definiciones Legales, Penas y Mecánica de Umbrales",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+            <!-- Lavado de Dinero -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-3">
+                <span class="p-2.5 rounded-lg bg-red-950/80 text-red-400 border border-red-900/60"><i class="ph-bold ph-currency-circle-dollar text-xl"></i></span>
+                <h3 class="text-lg font-bold text-white">Lavado de Dinero (Art. 400 Bis CPF)</h3>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Delito que consiste en adquirir, administrar, custodiar, cambiar, depositar o transferir bienes con conocimiento de que proceden o representan el producto de una actividad ilícita, para <strong>ocultar o encubrir su origen, localización, destino o propiedad legítima</strong>.
+              </p>
+              <div class="p-3 rounded-xl bg-red-900/20 border border-red-800/40 text-xs text-red-200">
+                <strong>Penalidad legal:</strong> 5 a 15 años de prisión y de 1,000 a 5,000 días de multa.
+              </div>
+            </div>
+
+            <!-- Actividades Vulnerables -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-3">
+                <span class="p-2.5 rounded-lg bg-amber-950/80 text-amber-400 border border-amber-900/60"><i class="ph-bold ph-warning-octagon text-xl"></i></span>
+                <h3 class="text-lg font-bold text-white">Actividades Vulnerables</h3>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Actividades económicas no financieras (art. 17 LFPIORPI) que por su propia naturaleza son susceptibles de ser utilizadas por la delincuencia para dar apariencia lícita a sus recursos ilícitos.
+              </p>
+              <div class="space-y-1.5 pt-1 text-xs">
+                <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200">
+                  <strong>Umbral de Identificación:</strong> Monto a partir del cual es obligatorio identificar al cliente y crear expediente único.
+                </div>
+                <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200">
+                  <strong>Umbral de Aviso:</strong> Monto a partir del cual debe remitirse reporte sistemático ante la UIF vía SAT.
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 italic text-right">* El valor de la UMA se actualiza el 1° de febrero de cada año.</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Catálogo de Umbrales I",
+        title: "Umbrales: Financieras No Bancarias, Inmuebles y Vehículos",
+        subtitle: "Láminas 9 y 10 • Valores vigentes 2026 (Valores calculados en base a UMA)",
+        content: `
+          <div class="space-y-4 my-auto">
+            <p class="text-xs text-slate-400">Las siguientes actividades generan obligaciones de identificación y aviso al alcanzar los siguientes montos acumulables:</p>
+            
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-slate-300 uppercase tracking-wider text-[11px] font-semibold border-b border-slate-800">
+                  <tr>
+                    <th class="p-3">Actividad Vulnerable (Art. 17)</th>
+                    <th class="p-3">Identificación (UMA)</th>
+                    <th class="p-3">Identificación (MN)</th>
+                    <th class="p-3">Aviso (UMA)</th>
+                    <th class="p-3">Aviso (MN)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-medium">
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Juegos con apuesta, sorteos y concursos</td>
+                    <td class="p-3 text-slate-300">325 UMA</td>
+                    <td class="p-3 text-slate-300">$38,125.75</td>
+                    <td class="p-3 text-amber-400">645 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$75,664.95</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Tarjetas de crédito o de servicios</td>
+                    <td class="p-3 text-slate-300">805 UMA</td>
+                    <td class="p-3 text-slate-300">$94,434.55</td>
+                    <td class="p-3 text-amber-400">1,285 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$150,743.35</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Tarjetas prepagadas, monederos y vales</td>
+                    <td class="p-3 text-slate-300">645 UMA</td>
+                    <td class="p-3 text-slate-300">$75,664.95</td>
+                    <td class="p-3 text-amber-400">645 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$75,664.95</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Cheques de viajero y Mutuo / Préstamos</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-amber-400">1,605 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$188,282.55</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40 bg-brand-950/20">
+                    <td class="p-3 text-white font-semibold">Bienes Inmuebles (Desarrollo, Venta, Intermediación)</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-amber-400">8,025 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$941,412.75</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Metales, Piedras Preciosas, Joyas y Relojes</td>
+                    <td class="p-3 text-slate-300">805 UMA</td>
+                    <td class="p-3 text-slate-300">$94,434.55</td>
+                    <td class="p-3 text-amber-400">1,605 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$188,282.55</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Vehículos (Terrestres, Marítimos, Aéreos)</td>
+                    <td class="p-3 text-slate-300">3,210 UMA</td>
+                    <td class="p-3 text-slate-300">$376,565.10</td>
+                    <td class="p-3 text-amber-400">6,420 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$753,130.20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-[11px] text-slate-400 flex items-center justify-between">
+              <span>* Base cálculo UMA 2026. La identificación previa es obligatoria en préstamos e inmuebles sin importar el monto.</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Catálogo de Umbrales II",
+        title: "Blindaje, Donativos, Arrendamiento y Criptoactivos",
+        subtitle: "Lámina 11 • Blindaje, Criptoactivos y Derechos de Uso",
+        content: `
+          <div class="space-y-4 my-auto">
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-slate-300 uppercase tracking-wider text-[11px] font-semibold border-b border-slate-800">
+                  <tr>
+                    <th class="p-3">Actividad Vulnerable</th>
+                    <th class="p-3">Identificación (UMA)</th>
+                    <th class="p-3">Identificación (MN)</th>
+                    <th class="p-3">Aviso (UMA)</th>
+                    <th class="p-3">Aviso (MN)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-medium">
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Servicios de Blindaje (Inmuebles/Vehículos)</td>
+                    <td class="p-3 text-slate-300">2,410 UMA</td>
+                    <td class="p-3 text-slate-300">$282,717.10</td>
+                    <td class="p-3 text-amber-400">4,815 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$564,847.65</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Traslado y Custodia de Dinero / Valores</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-amber-400">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Donativos a Donatarias Autorizadas (OSC)</td>
+                    <td class="p-3 text-slate-300">1,605 UMA</td>
+                    <td class="p-3 text-slate-300">$188,282.55</td>
+                    <td class="p-3 text-amber-400">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Arrendamiento de Inmuebles (Uso y Goce)</td>
+                    <td class="p-3 text-slate-300">1,605 UMA</td>
+                    <td class="p-3 text-slate-300">$188,282.55</td>
+                    <td class="p-3 text-amber-400">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40 bg-brand-950/30">
+                    <td class="p-3 text-white font-semibold">Operaciones con Activos Virtuales (Cripto)</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-emerald-400 font-bold">Siempre</td>
+                    <td class="p-3 text-amber-400">210 UMA / Contraprestación*</td>
+                    <td class="p-3 text-amber-400 font-bold">$24,635.10 / $469.24*</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Servicios Profesionales (Art. 17 Frac. XI) -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700/80">
+              <h4 class="text-xs font-bold text-brand-gold uppercase tracking-wider">Servicios Profesionales Independientes (Abogados / Contadores)</h4>
+              <p class="text-xs text-slate-300 mt-1">
+                <strong>Identificación:</strong> Siempre que preparen o realicen para sus clientes: compraventa de inmuebles, administración de activos/cuentas bancarias, aportaciones de capital o constitución/administración de personas morales y fideicomisos.
+              </p>
+              <p class="text-xs text-amber-300 mt-1 font-semibold">
+                <strong>Aviso:</strong> Se presenta ÚNICAMENTE cuando, en nombre y representación del cliente, se ejecute directamente alguna operación financiera vinculada a los actos señalados.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Fe Pública y Comercio Exterior",
+        title: "Umbrales: Notarios, Corredores Públicos y Aduanas",
+        subtitle: "Láminas 13, 14 y 15 • Fedatarios y Agentes Aduanales",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+            <!-- Notarios -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700/80 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                  <i class="ph-bold ph-stamp"></i> Notarios Públicos
+                </div>
+                <div class="mt-3 space-y-2 text-xs text-slate-300">
+                  <p>• <strong>Transmisión Inmuebles:</strong> Identifica Siempre / Aviso > 8,000 UMA ($938,480.00 MN).</p>
+                  <p>• <strong>Poderes irrevocables:</strong> Identifica y Avisa <span class="text-amber-400 font-bold">Siempre</span>.</p>
+                  <p>• <strong>Constitución / Sociedades:</strong> Identifica y Avisa <span class="text-amber-400 font-bold">Siempre</span>.</p>
+                  <p>• <strong>Fideicomisos:</strong> Aviso > 4,000 UMA ($469,240.00 MN).</p>
+                  <p>• <strong>Mutuo / Créditos:</strong> Identifica y Avisa <span class="text-amber-400 font-bold">Siempre</span>.</p>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-800 text-[11px] text-slate-400 font-semibold">Fe Pública Inmobiliaria y Corporativa</div>
+            </div>
+
+            <!-- Corredores Públicos -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700/80 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                  <i class="ph-bold ph-certificate"></i> Corredores Públicos
+                </div>
+                <div class="mt-3 space-y-2 text-xs text-slate-300">
+                  <p>• <strong>Avalúos sobre bienes:</strong> Identifica y Avisa > 8,025 UMA ($941,412.75 MN).</p>
+                  <p>• <strong>Sociedades Mercantiles:</strong> Modificación, fusión, venta acciones: <span class="text-amber-400 font-bold">Aviso Siempre</span>.</p>
+                  <p>• <strong>Fideicomisos mercantiles:</strong> <span class="text-amber-400 font-bold">Aviso Siempre</span>.</p>
+                  <p>• <strong>Mutuo o créditos mercantiles:</strong> <span class="text-amber-400 font-bold">Aviso Siempre</span>.</p>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-800 text-[11px] text-slate-400 font-semibold">Materia Exclusivamente Mercantil</div>
+            </div>
+
+            <!-- Comercio Exterior -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700/80 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                  <i class="ph-bold ph-airplane-tilt"></i> Agentes Aduanales
+                </div>
+                <div class="mt-3 space-y-2 text-xs text-slate-300">
+                  <p>• <strong>Vehículos, Máquinas de juego, Blindaje:</strong> Identifica y Avisa <span class="text-amber-400 font-bold">Siempre</span>.</p>
+                  <p>• <strong>Joyas, Relojes y Metales:</strong> Valor individual > 485 UMA ($56,895.35 MN).</p>
+                  <p>• <strong>Obras de Arte:</strong> > 4,815 UMA ($564,847.65 MN).</p>
+                  <p>• <strong>Materiales balísticos:</strong> <span class="text-amber-400 font-bold">Siempre</span>.</p>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-800 text-[11px] text-slate-400 font-semibold">Despacho Aduanal Especializado</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Calculadora Interactiva",
+        title: "Calculadora de Umbrales PLD 2026",
+        subtitle: "Herramienta Dinámica para Determinar Obligaciones",
+        content: `
+          <div class="p-6 rounded-2xl bg-slate-850 border border-slate-700/80 max-w-2xl mx-auto space-y-5 my-auto">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+              <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">Verificador de Operación</span>
+              <span class="text-xs text-slate-400">Valor UMA base: <strong>$117.31 MN</strong></span>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Selecciona la Actividad:</label>
+                <select id="calcActivity" onchange="runCalculator()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-brand-gold outline-none">
+                  <option value="inmuebles">Compraventa Inmuebles (Desarrollo/Intermediación)</option>
+                  <option value="vehiculos">Vehículos (Autos, Barcos, Aviones)</option>
+                  <option value="joyas">Metales, Piedras Preciosas y Joyería</option>
+                  <option value="arrendamiento">Arrendamiento de Inmuebles</option>
+                  <option value="mutuo">Mutuo o Créditos / Préstamos</option>
+                  <option value="blindaje">Blindaje de Vehículos o Inmuebles</option>
+                  <option value="cripto">Activos Virtuales (Criptomonedas)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Monto de la Operación (Pesos Mexicanos MXN):</label>
+                <input type="number" id="calcAmount" value="500000" oninput="runCalculator()" placeholder="Ingresa monto en pesos" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-brand-gold outline-none font-mono">
+              </div>
+
+              <!-- Resultados dinámicos -->
+              <div id="calcResults" class="p-4 rounded-xl bg-slate-900 border border-slate-700/60 grid grid-cols-2 gap-3 text-center">
+                <div class="p-3 rounded-lg bg-slate-800">
+                  <div class="text-[11px] text-slate-400 uppercase font-semibold">Identificación</div>
+                  <div id="resId" class="text-sm font-bold text-emerald-400 mt-1">OBLIGATORIA</div>
+                  <div id="resIdDetail" class="text-[10px] text-slate-400 mt-0.5">Siempre requerida</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800">
+                  <div class="text-[11px] text-slate-400 uppercase font-semibold">Presentación de Aviso</div>
+                  <div id="resAviso" class="text-sm font-bold text-slate-400 mt-1">NO OBLIGATORIO</div>
+                  <div id="resAvisoDetail" class="text-[10px] text-slate-400 mt-0.5">Umbral: $941,412.75</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Reforma Comparativa",
+        title: "Matriz de Obligaciones: Antes vs. Ahora",
+        subtitle: "Láminas 17 y 18 • Comparativa Integral de las Reformas 2025-2026",
+        content: `
+          <div class="space-y-4 my-auto">
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-slate-300 uppercase tracking-wider text-[11px] font-semibold border-b border-slate-800">
+                  <tr>
+                    <th class="p-3">Obligación Normativa</th>
+                    <th class="p-3 text-center">Antes de la Reforma</th>
+                    <th class="p-3 text-center">Régimen Actual (Nuevo)</th>
+                    <th class="p-3">Impacto / Requisito Principal</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-medium">
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Metodología de Enfoque Basado en Riesgo (EBR)</td>
+                    <td class="p-3 text-center text-red-400 font-bold"><i class="ph-bold ph-x-circle text-lg"></i> No exigido</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold"><i class="ph-bold ph-check-circle text-lg"></i> Obligatorio</td>
+                    <td class="p-3 text-slate-300">Obligatorio desde 1 de marzo 2027 (revisión anual / 12 meses).</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Clasificación de Grados de Riesgo del Cliente</td>
+                    <td class="p-3 text-center text-red-400 font-bold"><i class="ph-bold ph-x-circle text-lg"></i> No formal</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold"><i class="ph-bold ph-check-circle text-lg"></i> Obligatorio</td>
+                    <td class="p-3 text-slate-300">Mínimo 3 niveles (Bajo, Medio, Alto) con revisión semestral.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Perfil Transaccional, Monitoreo y Alertas</td>
+                    <td class="p-3 text-center text-red-400 font-bold"><i class="ph-bold ph-x-circle text-lg"></i> Inexistente</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold"><i class="ph-bold ph-check-circle text-lg"></i> Obligatorio</td>
+                    <td class="p-3 text-slate-300">Parámetros de volumen y monto; alertas ante desvíos inusuales.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Mecanismos Automatizados de Sistemas</td>
+                    <td class="p-3 text-center text-red-400 font-bold"><i class="ph-bold ph-x-circle text-lg"></i> Opcional</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold"><i class="ph-bold ph-check-circle text-lg"></i> Obligatorio</td>
+                    <td class="p-3 text-slate-300">Obligatorio al 1 de junio 2027 para expedientes y alertas.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Plazo de Conservación y Custodia</td>
+                    <td class="p-3 text-center text-amber-400 font-bold">5 Años</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold">10 Años</td>
+                    <td class="p-3 text-slate-300">Duplica el tiempo de resguardo de expedientes y registros.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Auditoría Anual PLD y Filtros de Personal</td>
+                    <td class="p-3 text-center text-red-400 font-bold"><i class="ph-bold ph-x-circle text-lg"></i> No obligatoria</td>
+                    <td class="p-3 text-center text-emerald-400 font-bold"><i class="ph-bold ph-check-circle text-lg"></i> Obligatorio</td>
+                    <td class="p-3 text-slate-300">Auditor externo para Alto Riesgo; 1er periodo: 2028.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Plataforma SPPLD",
+        title: "Alta, Notificaciones y Plazos Críticos en SPPLD",
+        subtitle: "Láminas 19, 20 y 21 • Portal Oficial y Cómputo de Días Hábiles",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+            <!-- Alta y Modificaciones -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-brand-gold font-bold">
+                <i class="ph-bold ph-globe-hemisphere-west text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Alta y Modificación</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Trámite obligatorio previo a operaciones en el portal <strong>SPPLD</strong> mediante e.firma y RFC vigentes del sujeto obligado.
+              </p>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-1.5">
+                <p>• <strong>Actualización de datos:</strong> Máximo <span class="text-amber-400 font-bold">6 días hábiles</span> posteriores al hecho.</p>
+                <p>• <strong>Baja del padrón:</strong> Inmediata al cesar la actividad vulnerable.</p>
+              </div>
+            </div>
+
+            <!-- Revisión Diaria -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-amber-400 font-bold">
+                <i class="ph-bold ph-clock-countdown text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Revisión Obligatoria</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                El sujeto obligado debe verificar el buzón SPPLD y el correo de contacto <strong>al menos una vez cada día hábil</strong> (o día hábil siguiente).
+              </p>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs">
+                <strong>Falla en el sistema:</strong> Si por causas de SAT/UIF no se puede abrir el portal, debe notificarse formalmente dentro de los <strong>3 días hábiles</strong>.
+              </div>
+            </div>
+
+            <!-- Regla de los 3 Días -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-red-400 font-bold">
+                <i class="ph-bold ph-envelope-open text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Efecto Notificaciones</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Se tienen <strong>3 días hábiles</strong> para abrir y consultar requerimientos o citatorios en el portal.
+              </p>
+              <div class="p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-xs text-red-200">
+                <strong>Alerta Legal:</strong> Si no se revisa dentro del plazo, surte efectos automáticamente al <strong>4° día hábil</strong>.
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Identificación de Clientes",
+        title: "Expediente Único y Reglas de Integración",
+        subtitle: "Láminas 22, 23, 24 y 27 • Criterios Estrictos de Debida Diligencia",
+        content: `
+          <div class="space-y-5 my-auto">
+            <!-- 6 Reglas de oro del expediente -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-hourglass-simple-high"></i> Integración Previa</span>
+                <p class="text-slate-300 mt-1">Antes o durante la operación. Prohibido operar a posteriori.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-prohibit"></i> Cero Anonimato</span>
+                <p class="text-slate-300 mt-1">Estrictamente prohibido nombres ficticios o cuentas anónimas.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-eye"></i> Cotejo Original</span>
+                <p class="text-slate-300 mt-1">Copias 100% legibles cotejadas contra originales auténticos.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-folders"></i> Uso Múltiple</span>
+                <p class="text-slate-300 mt-1">El expediente único sirve para todas las operaciones subsecuentes.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-warning-circle"></i> Cero Enmendaduras</span>
+                <p class="text-slate-300 mt-1">Documentos con tachaduras o alteraciones invalidan el expediente.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-800/70 border border-slate-700 text-xs">
+                <span class="font-bold text-brand-gold flex items-center gap-1.5"><i class="ph-bold ph-shield"></i> Resguardo</span>
+                <p class="text-slate-300 mt-1">Custodia de archivo físico o digital por 10 años en el domicilio fiscal.</p>
+              </div>
+            </div>
+
+            <!-- Proceso de 6 pasos -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 flex flex-wrap items-center justify-between gap-2 text-center text-xs">
+              <span class="p-2 rounded bg-slate-800 text-slate-200">1. Entrevista Inicial</span>
+              <i class="ph-bold ph-caret-right text-slate-500"></i>
+              <span class="p-2 rounded bg-slate-800 text-slate-200">2. Cuestionarios Anexos</span>
+              <i class="ph-bold ph-caret-right text-slate-500"></i>
+              <span class="p-2 rounded bg-slate-800 text-slate-200">3. Declaración Beneficiario</span>
+              <i class="ph-bold ph-caret-right text-slate-500"></i>
+              <span class="p-2 rounded bg-slate-800 text-slate-200">4. Validación Documental</span>
+              <i class="ph-bold ph-caret-right text-slate-500"></i>
+              <span class="p-2 rounded bg-slate-800 text-slate-200">5. Búsqueda en Listas</span>
+              <i class="ph-bold ph-caret-right text-slate-500"></i>
+              <span class="p-2 rounded bg-brand-900 border border-brand-gold/40 text-brand-gold font-bold">6. Grado Riesgo y Contrato</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Beneficiario Controlador",
+        title: "Beneficiario Controlador: Definición y Orden de Prelación",
+        subtitle: "Láminas 31, 32, 33 y 34 • El eje central de la fiscalización antilavado",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
+            <!-- Definición -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-brand-gold font-bold">
+                <i class="ph-bold ph-user-focus text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Concepto Legal Clave</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Persona física (o grupo) que en <strong>última instancia</strong> obtiene el beneficio o goce derivado del acto, o quien ejerce el <strong>control efectivo</strong> sobre la persona moral o fideicomiso.
+              </p>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+                <p>• <strong>Personas Morales & Fideicomisos:</strong> <span class="text-amber-400 font-bold">Siempre</span> se debe identificar y armar expediente exclusivo.</p>
+                <p>• <strong>Personas Físicas:</strong> Solo se arma expediente exclusivo cuando declare contar con un tercero como beneficiario.</p>
+                <p>• <strong>Resguardo:</strong> Conservar registros actualizados por <span class="text-emerald-400 font-bold">10 años</span>.</p>
+              </div>
+            </div>
+
+            <!-- Escalera de prelación (3 pasos forzosos) -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Orden Obligatorio de Prelación</h4>
+              <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-xl bg-slate-900 border border-brand-800/40">
+                  <div class="text-brand-gold font-bold">1. Titularidad del Capital (≥ 25%)</div>
+                  <p class="text-slate-300 mt-1">Quien posea directa o indirectamente el 25% o más de las acciones o partes sociales.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-amber-400 font-bold">2. Control Efectivo Real</div>
+                  <p class="text-slate-300 mt-1">Si nadie tiene el 25%, quien tome las decisiones estratégicas o dirija las políticas directivas.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-slate-300 font-bold">3. Alta Dirección / Administrador</div>
+                  <p class="text-slate-400 mt-1">Si los anteriores no son identificables: Funcionario de mayor rango administrativo (Dir. General).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Listas Oficiales y PEPs",
+        title: "Búsqueda en Listas y Personas Políticamente Expuestas",
+        subtitle: "Láminas 35, 36 y 37 • Monitoreo Internacional y Consulta PEP 2.0",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
+            <!-- Listas Oficiales -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-brand-gold font-bold">
+                <i class="ph-bold ph-list-magnifying-glass text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Listas de Consulta Obligatoria</h4>
+              </div>
+              <ul class="text-xs text-slate-300 space-y-2 leading-relaxed">
+                <li class="flex items-start gap-2">
+                  <i class="ph-bold ph-caret-right text-brand-gold mt-0.5"></i>
+                  <span><strong>Listas Negras y Grises del GAFI:</strong> Jurisdicciones de alto riesgo sujetas a llamado a la acción o monitoreo reforzado.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="ph-bold ph-caret-right text-brand-gold mt-0.5"></i>
+                  <span><strong>Consejo de Seguridad de la ONU:</strong> Personas y entidades sujetas a resoluciones y sanciones internacionales.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="ph-bold ph-caret-right text-brand-gold mt-0.5"></i>
+                  <span><strong>Listas UIF de Personas Bloqueadas.</strong></span>
+                </li>
+              </ul>
+              <div class="p-3 rounded-xl bg-brand-950/40 border border-brand-900/60 text-xs text-slate-300">
+                <strong class="text-brand-gold">Hito 2027:</strong> La UIF habilitará a más tardar el <strong>30 de agosto de 2027</strong> la plataforma oficial <em>Consulta PEP 2.0</em> mediante e.firma.
+              </div>
+            </div>
+
+            <!-- Personas Políticamente Expuestas -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-amber-400 font-bold">
+                <i class="ph-bold ph-buildings text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Régimen Estricto de PEPs</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Personas físicas que desempeñan o han desempeñado cargos públicos en México o el extranjero (jefes de estado, secretarios, magistrados, legisladores).
+              </p>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1.5">
+                <p>• <strong>Asimilados a PEP:</strong> Cónyuge, concubinos y parentesco consanguíneo o por afinidad hasta <strong>2° grado</strong>, y socios mercantiles con vínculos patrimoniales.</p>
+                <p>• <strong>Permanencia temporal:</strong> Se mantienen clasificados como PEP por <strong>1 año adicional</strong> tras dejar el encargo público.</p>
+                <p class="text-amber-300 font-medium">• Requieren aprobación de un directivo de alto rango para operar.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Gestión de Riesgo",
+        title: "Enfoque Basado en Riesgo (EBR) y Clasificación",
+        subtitle: "Láminas 39, 41, 42 y 43 • Entrada obligatoria escalonada al 1 de marzo 2027",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+            <!-- EBR -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-750 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                  <i class="ph-bold ph-chart-polar"></i> Metodología EBR
+                </div>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                  Diseñar e implementar una metodología interna para identificar y mitigar riesgos propios y de clientes. Basada en la Evaluación Nacional de Riesgos (ENR).
+                </p>
+                <div class="mt-3 text-xs space-y-1 text-slate-400">
+                  <p>• 4 elementos: clientes, productos, geografías, canales.</p>
+                  <p>• Actualización cada 12 meses o ante nuevos riesgos.</p>
+                </div>
+              </div>
+              <span class="text-[11px] text-amber-400 font-semibold mt-3">Exigible: 1 de marzo 2027</span>
+            </div>
+
+            <!-- Niveles de Riesgo -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-750 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                  <i class="ph-bold ph-gauge"></i> 3 Niveles Forzosos
+                </div>
+                <div class="mt-3 space-y-2 text-xs">
+                  <div class="p-2 rounded bg-emerald-950/40 border border-emerald-800/40 text-emerald-300">
+                    <strong>Riesgo Bajo:</strong> Expediente simplificado con anexos básicos.
+                  </div>
+                  <div class="p-2 rounded bg-amber-950/40 border border-amber-800/40 text-amber-300">
+                    <strong>Riesgo Medio:</strong> Debida diligencia estándar ordinaria.
+                  </div>
+                  <div class="p-2 rounded bg-red-950/40 border border-red-800/40 text-red-300">
+                    <strong>Riesgo Alto:</strong> Debida diligencia reforzada y cuestionarios extendidos.
+                  </div>
+                </div>
+              </div>
+              <span class="text-[11px] text-slate-400 mt-3">Reevaluación obligatoria cada 6 meses</span>
+            </div>
+
+            <!-- Supuestos Alto Riesgo -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-750 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2 text-red-400 font-bold text-sm">
+                  <i class="ph-bold ph-shield-warning"></i> Factores de Riesgo Alto
+                </div>
+                <ul class="text-xs text-slate-300 mt-2 space-y-1.5">
+                  <li>• Clientes no residentes en territorio mexicano.</li>
+                  <li>• Países enlistados por GAFI o paraísos fiscales.</li>
+                  <li>• Personas Políticamente Expuestas (PEPs).</li>
+                  <li>• Incongruencia en perfil transaccional o giros opacos.</li>
+                </ul>
+              </div>
+              <p class="text-[11px] text-red-300 font-medium mt-3 border-t border-slate-800 pt-2">
+                Medidas reforzadas: Justificar propósito en México y validar en Secretaría de Economía.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Perfil y Tipos de Avisos",
+        title: "Perfil Transaccional y Tipología de Avisos ante el SAT/UIF",
+        subtitle: "Láminas 44 a 50 • Avisos en Cero, Con Información y Por Acumulación",
+        content: `
+          <div class="space-y-4 my-auto">
+            <!-- Definición de Perfil -->
+            <div class="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <strong class="text-brand-gold uppercase tracking-wider">Perfil Transaccional (Obligatorio Marzo 2027):</strong>
+                <span class="text-slate-300 ml-1">Comportamiento esperado en base a montos máximos, frecuencia y geografía durante los primeros 6 meses.</span>
+              </div>
+              <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-[11px] text-amber-300 whitespace-nowrap">Evaluación Semestral</span>
+            </div>
+
+            <!-- 4 Tipos de Avisos Ordinarios -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="p-4 rounded-xl bg-slate-850 border border-slate-700">
+                <span class="text-xs font-bold text-slate-400 uppercase">Tipo 1</span>
+                <h4 class="text-sm font-bold text-white mt-1">Avisos Sin Operaciones</h4>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                  Cuando en el mes no se superaron umbrales de aviso. Se reporta en cero solo con datos del sujeto obligado y periodo.
+                </p>
+                <div class="text-[11px] text-amber-400 font-semibold mt-3">Límite: Día 17 del mes siguiente</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-850 border border-slate-700">
+                <span class="text-xs font-bold text-brand-gold uppercase">Tipo 2</span>
+                <h4 class="text-sm font-bold text-white mt-1">Avisos Con Información</h4>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                  Operación individual que iguala o supera el umbral de aviso. Incluye datos de liquidación, cliente y beneficiario.
+                </p>
+                <div class="text-[11px] text-amber-400 font-semibold mt-3">Límite: Día 17 del mes siguiente</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-850 border border-slate-700">
+                <span class="text-xs font-bold text-amber-400 uppercase">Tipo 3</span>
+                <h4 class="text-sm font-bold text-white mt-1">Por Acumulación</h4>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                  Suma de operaciones en una ventana móvil de hasta 6 meses que iguala o supera el umbral de aviso.
+                </p>
+                <div class="text-[11px] text-emerald-400 font-semibold mt-3">Solo acumula operaciones que superaron identificación</div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+              <span><strong>Avisos Modificatorios:</strong> Se presentan dentro de los 30 días posteriores al acuse. <em>Solo pueden modificarse una única vez</em>. Los reportes en cero no son modificables.</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Caso Práctico Acumulación",
+        title: "Mecánica Práctica de Acumulación Semestral",
+        subtitle: "Lámina 51 • Regla de Oro: Solo se acumulan actos que rebasen Identificación",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+            <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+              <div class="p-4 rounded-xl bg-brand-950/40 border border-brand-900/60">
+                <h4 class="font-bold text-brand-gold text-sm">Regla Clave del Sistema de Acumulación</h4>
+                <p class="mt-1">
+                  Para acumular operaciones en un periodo de 6 meses, <strong>únicamente se suman aquellas operaciones que individualmente hayan superado el umbral de identificación</strong>.
+                </p>
+                <p class="mt-1 text-slate-400">
+                  Las compras o actos que queden por debajo del umbral de identificación son jurídicamente invisibles para efectos de acumulación.
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-800 text-slate-300">
+                <strong>Ejemplo: Comercialización de Vehículos (2026)</strong>
+                <p>• Umbral Identificación: 3,210 UMA ($376,565.10 MXN)</p>
+                <p>• Umbral Aviso: 6,420 UMA ($753,130.20 MXN)</p>
+              </div>
+            </div>
+
+            <!-- Tabla comparativa visual -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 text-xs space-y-3">
+              <h4 class="font-bold text-white border-b border-slate-700 pb-2">Simulación de Operaciones de un Cliente:</h4>
+              
+              <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 rounded bg-emerald-950/30 border border-emerald-800/40">
+                  <span>Enero: $448,504.70 MXN (Supera ID)</span>
+                  <span class="text-emerald-400 font-bold">Acumulable ✓</span>
+                </div>
+                <div class="flex justify-between items-center p-2 rounded bg-slate-900 opacity-60">
+                  <span>Febrero: $300,000.00 MXN (No supera ID)</span>
+                  <span class="text-red-400 font-bold">Descartada ✗</span>
+                </div>
+                <div class="flex justify-between items-center p-2 rounded bg-slate-900 opacity-60">
+                  <span>Marzo: $290,500.50 MXN (No supera ID)</span>
+                  <span class="text-red-400 font-bold">Descartada ✗</span>
+                </div>
+                <div class="flex justify-between items-center p-2 rounded bg-emerald-950/30 border border-emerald-800/40">
+                  <span>Mayo: $448,504.70 MXN (Supera ID)</span>
+                  <span class="text-emerald-400 font-bold">Acumulable ✓</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-900 border border-amber-800/60 mt-3 text-slate-200">
+                <div class="flex justify-between font-bold">
+                  <span>Total Acumulado Válido:</span>
+                  <span class="text-amber-400">$897,009.40 MXN</span>
+                </div>
+                <p class="text-[11px] text-amber-300 mt-1">Supera el umbral de Aviso ($753,130.20). <strong>Genera obligación forzosa de presentar Aviso por Acumulación.</strong></p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Avisos de 24 Horas",
+        title: "Avisos de 24 Horas y Alertas de Operación Inusual",
+        subtitle: "Láminas 53 y 54 • Reportes Urgentes ante Indicios o Listas Negras",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
+            <!-- Criterios de activación -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-red-400 font-bold">
+                <i class="ph-bold ph-alarm text-2xl"></i>
+                <h4 class="text-sm uppercase tracking-wider">Aviso Inmediato (24 Horas)</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Se presenta cuando existan hechos o indicios de que los recursos provienen o van dirigidos al lavado de dinero o financiamiento al terrorismo, o con personas en listas negras.
+              </p>
+              <div class="p-3.5 rounded-xl bg-red-950/30 border border-red-800/50 text-xs text-red-200 space-y-1.5">
+                <p>• <strong>Plazo estricto:</strong> Máximo <strong>24 horas siguientes</strong> a que se tuvo conocimiento.</p>
+                <p>• <strong>Sin importar monto:</strong> Aplica aunque la operación <strong>no alcance umbral</strong> o no haya llegado a concretarse.</p>
+              </div>
+            </div>
+
+            <!-- Catálogo de 6 Alertas Típicas -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-2.5">
+              <h4 class="text-xs font-bold text-brand-gold uppercase tracking-wider">Top Alertas de 24 Horas</h4>
+              <div class="space-y-1.5 text-xs text-slate-300">
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">1. Negativa rotunda a proporcionar documentos de identidad.</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">2. Pago realizado por terceros sin relación aparente.</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">3. Cliente originario de jurisdicción de alto riesgo (Lista GAFI).</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">4. Pagos fraccionados o en divisas en efectivo sin justificación.</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">5. Aportación de documentos apócrifos o datos falsos dolosos.</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">6. Insistencia de liquidar en efectivo rebasando el tope legal.</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Efectivo y Metales",
+        title: "Restricción Absoluta del Uso de Efectivo (Art. 32)",
+        subtitle: "Láminas 63 y 64 • Prohibición de Moneda Física, Divisas y Metales Preciosos",
+        content: `
+          <div class="space-y-4 my-auto">
+            <div class="p-4 rounded-xl bg-brand-950/40 border border-brand-900/60 text-xs text-slate-300">
+              <strong class="text-brand-gold text-sm">Prohibición de Liquidación en Efectivo:</strong>
+              Se prohíbe pagar o aceptar el pago con billetes, monedas (nacionales o divisas) o metales preciosos que superen los topes de ley. <em>Aplica incluso si el pago proviene de instituciones o consignación judicial, e incluye impuestos y accesorios.</em>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-slate-300 uppercase tracking-wider text-[11px] font-semibold border-b border-slate-800">
+                  <tr>
+                    <th class="p-3">Operación Sujeta a Restricción</th>
+                    <th class="p-3">Límite UMAS</th>
+                    <th class="p-3">Tope Máximo en MN (2026)</th>
+                    <th class="p-3">Regla Legal</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-medium">
+                  <tr class="hover:bg-slate-800/40 bg-brand-950/20">
+                    <td class="p-3 text-white font-semibold">Compraventa de Inmuebles</td>
+                    <td class="p-3 text-slate-300 font-bold">8,025 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$941,412.75 MN</td>
+                    <td class="p-3 text-slate-300">El resto forzosamente por transferencia/cheque.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Vehículos (Terrestres, Aéreos, Marítimos)</td>
+                    <td class="p-3 text-slate-300 font-bold">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10 MN</td>
+                    <td class="p-3 text-slate-300">Prohibido rebasar este monto en moneda física.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Joyas, Relojes, Metales Preciosos y Arte</td>
+                    <td class="p-3 text-slate-300 font-bold">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10 MN</td>
+                    <td class="p-3 text-slate-300">Aplica por la totalidad del acto u operación.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Apuestas, Concursos y Sorteos</td>
+                    <td class="p-3 text-slate-300 font-bold">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10 MN</td>
+                    <td class="p-3 text-slate-300">Tope para fichas, boletos o cobro de premios.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 text-white font-semibold">Acciones / Partes Sociales y Arrendamiento</td>
+                    <td class="p-3 text-slate-300 font-bold">3,210 UMA</td>
+                    <td class="p-3 text-amber-400 font-bold">$376,565.10 MN</td>
+                    <td class="p-3 text-slate-300">Renta mensual o acumulada del contrato.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Régimen Sancionador",
+        title: "Catálogo de Sanciones Administrativas y Penales",
+        subtitle: "Láminas 46 y 65 • Multas Millonarias y Delitos de Prisión",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+            <!-- Sanción Leve/Media -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 flex flex-col justify-between">
+              <div>
+                <span class="text-[11px] font-bold text-amber-400 uppercase">Multa Nivel 1</span>
+                <div class="text-base font-bold text-white mt-1">200 a 2,000 UMA</div>
+                <div class="text-sm font-semibold text-amber-300">$23,462 a $234,620 MN</div>
+                <ul class="text-xs text-slate-300 mt-3 space-y-1">
+                  <li>• Incumplir identificación o cuestionarios.</li>
+                  <li>• Integración deficiente de expediente.</li>
+                  <li>• Presentar avisos fuera de tiempo.</li>
+                  <li>• Avisos con inconsistencias de formato.</li>
+                </ul>
+              </div>
+              <span class="text-[10px] text-slate-400 mt-3 border-t border-slate-800 pt-2">Por cada expediente o cliente omiso</span>
+            </div>
+
+            <!-- Sanción Grave -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 flex flex-col justify-between">
+              <div>
+                <span class="text-[11px] font-bold text-red-400 uppercase">Multa Nivel 2</span>
+                <div class="text-base font-bold text-white mt-1">2,000 a 10,000 UMA</div>
+                <div class="text-sm font-semibold text-red-300">$234,620 a $1,173,100 MN</div>
+                <ul class="text-xs text-slate-300 mt-3 space-y-1">
+                  <li>• Omitir la identificación y registro formal del <strong>Beneficiario Controlador</strong>.</li>
+                  <li>• Negarse a entregar documentación en visitas de verificación del SAT.</li>
+                </ul>
+              </div>
+              <span class="text-[10px] text-slate-400 mt-3 border-t border-slate-800 pt-2">Sanción acumulable por persona moral</span>
+            </div>
+
+            <!-- Sanción Crítica & Delito -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-red-900/60 bg-red-950/20 flex flex-col justify-between">
+              <div>
+                <span class="text-[11px] font-bold text-red-400 uppercase">Multa Nivel 3 y Prisión</span>
+                <div class="text-base font-bold text-white mt-1">10,000 a 65,000 UMA</div>
+                <div class="text-sm font-semibold text-red-300">$1,173,100 a $7,625,150 MN</div>
+                <div class="text-xs text-amber-300 font-bold mt-1">O 10% a 100% de la operación (la mayor)</div>
+                <ul class="text-xs text-slate-300 mt-2 space-y-1">
+                  <li>• Omitir por completo la presentación de Avisos.</li>
+                  <li>• Violar restricciones del uso de efectivo.</li>
+                </ul>
+                <div class="mt-2 p-2 rounded bg-slate-900 border border-red-900 text-[11px] text-red-200">
+                  <strong>Delito Penal:</strong> 2 a 8 años de prisión por entregar dolosamente documentos falsos para avisos.
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Auditoría, Manual y Personal",
+        title: "Gobierno Corporativo: Manual, Capacitación y Auditoría Anual",
+        subtitle: "Láminas 55, 58, 60, 61 y 62 • Cumplimiento Estructural Interno",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
+            <!-- Manual PLD -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 space-y-2">
+              <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                <i class="ph-bold ph-book-open"></i> Manual PLD
+              </div>
+              <p class="text-xs text-slate-300">
+                Políticas, criterios y medidas obligatorias ajustadas a la actividad específica del sujeto obligado.
+              </p>
+              <div class="p-2.5 rounded bg-slate-900 text-xs space-y-1">
+                <p>• Plazo de elaboración: <strong>90 días naturales</strong> tras el alta.</p>
+                <p>• Homogéneo para todo el grupo empresarial o filiales.</p>
+              </div>
+            </div>
+
+            <!-- Capacitación y RRHH -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 space-y-2">
+              <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                <i class="ph-bold ph-graduation-cap"></i> Personal y RRHH
+              </div>
+              <p class="text-xs text-slate-300">
+                Capacitación anual evaluada para directivos, áreas de contacto, cumplimiento y auditoría.
+              </p>
+              <div class="p-2.5 rounded bg-slate-900 text-xs space-y-1">
+                <p>• Instructor con min. 5 años de experiencia comprobada.</p>
+                <p>• <strong>Selección:</strong> Declaración firmada de no inhabilitación ni antecedentes (marzo 2027).</p>
+              </div>
+            </div>
+
+            <!-- Auditoría Anual -->
+            <div class="p-4 rounded-xl bg-slate-850 border border-slate-700 space-y-2">
+              <div class="flex items-center gap-2 text-brand-gold font-bold text-sm">
+                <i class="ph-bold ph-clipboard-text"></i> Auditoría Anual
+              </div>
+              <p class="text-xs text-slate-300">
+                Dictamen formal de efectividad de cumplimiento normativo (periodo calendario 1 ene - 31 dic).
+              </p>
+              <div class="p-2.5 rounded bg-slate-900 text-xs space-y-1">
+                <p>• <strong>1er periodo auditado:</strong> Año 2028.</p>
+                <p>• Auditor externo certificado UIF obligatorio para sujetos de Riesgo Alto.</p>
+                <p>• Entrega dictamen: antes del 31 de marzo.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Estrategia Legal en Visitas",
+        title: "Visitas de Verificación del SAT y Beneficio del Art. 55",
+        subtitle: "Láminas 66 a 73 • Flujo Procesal y Decálogo de Qué Sí / Qué No Hacer",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto">
+            <!-- Beneficio del Cumplimiento Espontáneo -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                <i class="ph-bold ph-shield-star text-xl"></i> Beneficio Art. 55 LFPIORPI
+              </div>
+              <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="font-bold text-emerald-300">1. Cero Sanción (Por Única Ocasión):</div>
+                  <p class="text-slate-300 mt-1">Cumplimiento espontáneo antes del inicio de facultades reconociendo expresamente la falta. Se hace valer en el término de 5 días hábiles del acta.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="font-bold text-amber-300">2. Reducción al 50% de Multas:</div>
+                  <p class="text-slate-300 mt-1">Si ya se utilizó la dispensa anterior, subsanar la falta previa y reconocerla da derecho a reducir el 50% de la sanción (plazo: 15 días).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Decálogo Qué Sí / Qué No Hacer -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-2.5">
+              <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Actuación en Visita del SAT</h4>
+                <span class="text-[10px] text-amber-400 font-bold">¡Llamar a litigante PLD!</span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="p-2.5 rounded-lg bg-emerald-950/30 border border-emerald-800/40 text-emerald-200 space-y-1">
+                  <div class="font-bold text-emerald-400">QUÉ SÍ HACER</div>
+                  <p>✓ Verificar credencial e idoneidad de la orden.</p>
+                  <p>✓ Avisar al Oficial de Cumplimiento.</p>
+                  <p>✓ Entregar solo lo vinculado a la orden.</p>
+                  <p>✓ Pedir acuse y copia de todo lo firmado.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-red-950/30 border border-red-800/40 text-red-200 space-y-1">
+                  <div class="font-bold text-red-400">QUÉ NO HACER</div>
+                  <p>✗ No entregar documentos fuera de la orden.</p>
+                  <p>✗ Cero declaraciones de "buena fe" informales.</p>
+                  <p>✗ Jamás impedir el acceso (agrava sanción).</p>
+                  <p>✗ No firmar actas con reservas erróneas sin abogado.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Defensa Jurídica",
+        title: "Medios de Defensa Legal: TFJA y Juicio de Amparo",
+        subtitle: "Lámina 74 • Pros y Contras de las Vías de Impugnación",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+            <!-- Juicio Contencioso Administrativo -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-brand-gold font-bold">
+                <i class="ph-bold ph-gavel text-2xl"></i>
+                <h4 class="text-base text-white">Juicio Contencioso Administrativo Federal</h4>
+              </div>
+              <p class="text-xs text-slate-400">Tramitado ante las Salas del Tribunal Federal de Justicia Administrativa (TFJA).</p>
+              
+              <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-xl bg-emerald-950/30 border border-emerald-800/40">
+                  <strong class="text-emerald-400">PROS:</strong>
+                  <p class="text-slate-300 mt-1">• Tribunal con mayor conocimiento técnico contable y fiscal.</p>
+                  <p class="text-slate-300">• Revisión exhaustiva de vicios formales y de fondo.</p>
+                  <p class="text-slate-300">• Procedencia de vía sumaria según cuantía.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-red-950/30 border border-red-800/40">
+                  <strong class="text-red-400">CONTRAS:</strong>
+                  <p class="text-slate-300 mt-1">• Crecientes criterios pro-autoridad en salas especializadas.</p>
+                  <p class="text-slate-300">• No analizan la inconstitucionalidad de los artículos de la Ley.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Juicio de Amparo -->
+            <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700/80 space-y-3">
+              <div class="flex items-center gap-2.5 text-brand-gold font-bold">
+                <i class="ph-bold ph-scales text-2xl"></i>
+                <h4 class="text-base text-white">Juicio de Amparo Indirecto</h4>
+              </div>
+              <p class="text-xs text-slate-400">Tramitado ante Juzgados de Distrito en Materia Administrativa.</p>
+              
+              <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-xl bg-emerald-950/30 border border-emerald-800/40">
+                  <strong class="text-emerald-400">PROS:</strong>
+                  <p class="text-slate-300 mt-1">• Permite impugnar la inconstitucionalidad directa de la LFPIORPI.</p>
+                  <p class="text-slate-300">• Combate la desproporcionalidad y exceso de las multas de la UIF.</p>
+                  <p class="text-slate-300">• Procedencia de Suspensión contra actos lesivos.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-red-950/30 border border-red-800/40">
+                  <strong class="text-red-400">CONTRAS:</strong>
+                  <p class="text-slate-300 mt-1">• Criterios judiciales restrictivos.</p>
+                  <p class="text-slate-300">• Desconocimiento recurrente de la materia técnica antilavado en juzgados ordinarios.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        tag: "Conclusiones y Contacto",
+        title: "Conclusiones y Directorio de Especialistas PLD",
+        subtitle: "Lámina 75 • Barra Mexicana de Abogados, AREIA y Ramos Castillo",
+        content: `
+          <div class="space-y-6 max-w-3xl mx-auto my-auto text-center">
+            <div class="p-5 rounded-2xl bg-gradient-to-r from-brand-950 to-slate-900 border border-brand-gold/30">
+              <h3 class="text-lg font-bold text-white">Estrategia de Blindaje Preventivo 2026-2027</h3>
+              <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                El nuevo régimen antilavado sanciona la falta de debida diligencia documental y el descuido de los plazos en el portal SPPLD. Contar con un expediente impecable del Beneficiario Controlador y la correcta identificación de umbrales es la única salvaguarda efectiva.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+              <div class="p-5 rounded-xl bg-slate-850 border border-slate-700/80">
+                <p class="text-xs font-bold text-brand-gold uppercase">AREIA Abogados</p>
+                <h4 class="text-base font-bold text-white mt-1">Lic. Michelle Arellano</h4>
+                <div class="text-xs text-slate-300 mt-2 space-y-1">
+                  <p class="flex items-center gap-2"><i class="ph-bold ph-envelope text-slate-400"></i> contacto@areiaabogados.com</p>
+                  <p class="flex items-center gap-2"><i class="ph-bold ph-phone text-slate-400"></i> 33 2793 3910</p>
+                  <p class="text-[11px] text-slate-400 mt-1">Guadalajara / CDMX</p>
+                </div>
+              </div>
+
+              <div class="p-5 rounded-xl bg-slate-850 border border-slate-700/80">
+                <p class="text-xs font-bold text-brand-gold uppercase">Ramos Castillo Abogados</p>
+                <h4 class="text-base font-bold text-white mt-1">Lic. Mónica Cárdenas</h4>
+                <div class="text-xs text-slate-300 mt-2 space-y-1">
+                  <p class="flex items-center gap-2"><i class="ph-bold ph-envelope text-slate-400"></i> m.cardenas@ramoscastillo.com</p>
+                  <p class="flex items-center gap-2"><i class="ph-bold ph-scales text-slate-400"></i> Comisión PLD BMA Jalisco</p>
+                  <p class="text-[11px] text-slate-400 mt-1">Defensa Contenciosa & Amparo</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 text-xs text-slate-400">
+              Barra Mexicana, Colegio de Abogados A.C. • Comisión de Prevención de Lavado de Dinero
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    // ==========================================
+    // ESTADO Y LÓGICA DE CONTROL
+    // ==========================================
+    let currentSlide = 0;
+    const totalSlides = slidesData.length;
+    let viewMode = 'slide'; // 'slide' o 'doc'
+
+    function renderSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      currentSlide = index;
+
+      const data = slidesData[currentSlide];
+      const contentEl = document.getElementById('slideContent');
+      
+      // Aplicar animación de cambio
+      contentEl.classList.remove('slide-active');
+      contentEl.classList.add('slide-enter');
+
+      // Actualizar encabezados y medidores
+      document.getElementById('slideTag').innerText = data.tag;
+      document.getElementById('slideSubtitle').innerText = data.subtitle;
+      document.getElementById('slideCounter').innerText = `${currentSlide + 1} / ${totalSlides}`;
+      
+      // Barra de progreso
+      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+      document.getElementById('slideProgressBar').style.width = `${progressPercent}%`;
+
+      // Render del cuerpo del slide
+      setTimeout(() => {
+        contentEl.innerHTML = `
+          <div class="max-w-4xl mx-auto w-full flex-1 flex flex-col justify-center">
+            <div class="mb-5">
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">${data.title}</h2>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1">${data.subtitle}</p>
+            </div>
+            ${data.content}
+          </div>
+        `;
+        contentEl.classList.remove('slide-enter');
+        contentEl.classList.add('slide-active');
+        
+        // Inicializar calculadora si estamos en la lámina correspondiente
+        if (currentSlide === 5) {
+          runCalculator();
+        }
+      }, 50);
+
+      // Estado de botones de navegación
+      document.getElementById('prevBtn').disabled = (currentSlide === 0);
+      document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    function goToSlide(index) {
+      if (viewMode !== 'slide') setViewMode('slide');
+      renderSlide(index);
+    }
+
+    // ==========================================
+    // CAMBIO ENTRE VISTA SLIDE Y VISTA DOCUMENTO
+    // ==========================================
+    function setViewMode(mode) {
+      viewMode = mode;
+      const slideViewport = document.getElementById('slideViewport');
+      const docViewport = document.getElementById('docViewport');
+      const slideFooter = document.getElementById('slideFooterControls');
+      const slideBtn = document.getElementById('viewSlideBtn');
+      const docBtn = document.getElementById('viewDocBtn');
+
+      if (mode === 'slide') {
+        slideViewport.classList.remove('hidden');
+        docViewport.classList.add('hidden');
+        slideFooter.classList.remove('hidden');
+        
+        slideBtn.className = "px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 bg-brand-800 text-white transition shadow-sm";
+        docBtn.className = "px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition";
+        renderSlide(currentSlide);
+      } else {
+        slideViewport.classList.add('hidden');
+        docViewport.classList.remove('hidden');
+        slideFooter.classList.add('hidden');
+        
+        docBtn.className = "px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 bg-brand-800 text-white transition shadow-sm";
+        slideBtn.className = "px-3 py-1.5 rounded-md font-medium flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition";
+        buildDocView();
+      }
+    }
+
+    function buildDocView() {
+      const doc = document.getElementById('docViewport');
+      let html = `
+        <div class="text-center space-y-2 border-b border-slate-800 pb-8">
+          <div class="inline-block px-3 py-1 bg-brand-950 text-brand-gold border border-brand-gold/30 rounded-full text-xs font-semibold uppercase">Guía Completa de Estudio</div>
+          <h1 class="text-3xl font-extrabold text-white">Manual Ejecutivo: PLD y Actividades Vulnerables</h1>
+          <p class="text-slate-400 text-sm max-w-2xl mx-auto">Compendio integral de la capacitación impartida por AREIA Abogados y Ramos Castillo en la Barra Mexicana de Abogados.</p>
+        </div>
+      `;
+
+      slidesData.forEach((s, idx) => {
+        html += `
+          <article class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <span class="text-xs font-bold text-brand-gold tracking-wide uppercase">[Tema ${idx + 1}] • ${s.tag}</span>
+              <button onclick="goToSlide(${idx})" class="text-xs text-slate-400 hover:text-brand-gold flex items-center gap-1">
+                Ver en Slide <i class="ph-bold ph-arrow-square-out"></i>
+              </button>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white">${s.title}</h2>
+            <div class="text-slate-300 text-sm pt-2">
+              ${s.content}
+            </div>
+          </article>
+        `;
+      });
+      doc.innerHTML = html;
+    }
+
+    // ==========================================
+    // CALCULADORA DE UMBRALES INTERACTIVA
+    // ==========================================
+    function runCalculator() {
+      const act = document.getElementById('calcActivity');
+      const amtInput = document.getElementById('calcAmount');
+      if (!act || !amtInput) return;
+
+      const actVal = act.value;
+      const amt = parseFloat(amtInput.value) || 0;
+      const uma = 117.31; // Valor UMA base 2026
+
+      let idAlways = false;
+      let idThreshold = 0;
+      let avisoThreshold = 0;
+
+      switch(actVal) {
+        case 'inmuebles':
+          idAlways = true;
+          avisoThreshold = 8025 * uma; // $941,412.75
+          break;
+        case 'vehiculos':
+          idThreshold = 3210 * uma; // $376,565.10
+          avisoThreshold = 6420 * uma; // $753,130.20
+          break;
+        case 'joyas':
+          idThreshold = 805 * uma; // $94,434.55
+          avisoThreshold = 1605 * uma; // $188,282.55
+          break;
+        case 'arrendamiento':
+          idThreshold = 1605 * uma; // $188,282.55
+          avisoThreshold = 3210 * uma; // $376,565.10
+          break;
+        case 'mutuo':
+          idAlways = true;
+          avisoThreshold = 1605 * uma; // $188,282.55
+          break;
+        case 'blindaje':
+          idThreshold = 2410 * uma; // $282,717.10
+          avisoThreshold = 4815 * uma; // $564,847.65
+          break;
+        case 'cripto':
+          idAlways = true;
+          avisoThreshold = 210 * uma; // $24,635.10
+          break;
+      }
+
+      // Evaluar Identificación
+      const resId = document.getElementById('resId');
+      const resIdDetail = document.getElementById('resIdDetail');
+      if (idAlways || amt >= idThreshold) {
+        resId.innerText = "OBLIGATORIA";
+        resId.className = "text-sm font-bold text-emerald-400 mt-1";
+        resIdDetail.innerText = idAlways ? "Obligatoria sin importar el monto" : `Rebasó umbral ($${idThreshold.toLocaleString('es-MX', {maximumFractionDigits:2})})`;
+      } else {
+        resId.innerText = "EXENTA";
+        resId.className = "text-sm font-bold text-slate-400 mt-1";
+        resIdDetail.innerText = `Menor al umbral ($${idThreshold.toLocaleString('es-MX', {maximumFractionDigits:2})})`;
+      }
+
+      // Evaluar Aviso
+      const resAviso = document.getElementById('resAviso');
+      const resAvisoDetail = document.getElementById('resAvisoDetail');
+      if (amt >= avisoThreshold) {
+        resAviso.innerText = "¡AVISO OBLIGATORIO!";
+        resAviso.className = "text-sm font-bold text-amber-400 mt-1";
+        resAvisoDetail.innerText = `Rebasó umbral ($${avisoThreshold.toLocaleString('es-MX', {maximumFractionDigits:2})})`;
+      } else {
+        resAviso.innerText = "SIN AVISO";
+        resAviso.className = "text-sm font-bold text-slate-400 mt-1";
+        resAvisoDetail.innerText = `Umbral de aviso: $${avisoThreshold.toLocaleString('es-MX', {maximumFractionDigits:2})}`;
+      }
+    }
+
+    // ==========================================
+    // BUSCADOR MODAL Y ATAJOS
+    // ==========================================
+    function toggleModal(modalId) {
+      const m = document.getElementById(modalId);
+      const isHidden = m.classList.contains('hidden');
+      if (isHidden) {
+        m.classList.remove('hidden');
+        renderSearchList(slidesData);
+        setTimeout(() => document.getElementById('searchInput').focus(), 100);
+      } else {
+        m.classList.add('hidden');
+      }
+    }
+
+    function renderSearchList(list) {
+      const container = document.getElementById('searchResults');
+      if (list.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">No se encontraron temas coincidentes.</div>`;
+        return;
+      }
+      container.innerHTML = list.map(item => {
+        const originalIndex = slidesData.indexOf(item);
+        return `
+          <button onclick="goToSlide(${originalIndex}); toggleModal('searchModal');" class="w-full text-left p-3 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 flex items-center justify-between transition group">
+            <div>
+              <div class="text-[11px] font-bold text-brand-gold uppercase tracking-wider">${item.tag}</div>
+              <div class="text-sm font-semibold text-white group-hover:text-brand-gold transition">${item.title}</div>
+              <div class="text-xs text-slate-400 mt-0.5 line-clamp-1">${item.subtitle}</div>
+            </div>
+            <i class="ph-bold ph-caret-right text-slate-500 group-hover:text-white transition"></i>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function filterSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!query) {
+        renderSearchList(slidesData);
+        return;
+      }
+      const filtered = slidesData.filter(s => 
+        s.title.toLowerCase().includes(query) ||
+        s.subtitle.toLowerCase().includes(query) ||
+        s.tag.toLowerCase().includes(query) ||
+        s.content.toLowerCase().includes(query)
+      );
+      renderSearchList(filtered);
+    }
+
+    // Pantalla completa
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        document.getElementById('fsIcon').className = "ph-bold ph-arrows-in text-lg";
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          document.getElementById('fsIcon').className = "ph-bold ph-arrows-out text-lg";
+        }
+      }
+    }
+
+    // Navegación por teclado
+    window.addEventListener('keydown', (e) => {
+      // Ignorar si está escribiendo en el input de búsqueda o calculadora
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        if (e.key === 'Escape') {
+          toggleModal('searchModal');
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === '/' || e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        toggleModal('searchModal');
+      } else if (e.key === 'Escape') {
+        const sm = document.getElementById('searchModal');
+        if (!sm.classList.contains('hidden')) toggleModal('searchModal');
+      } else if (e.key === 'Home') {
+        goToSlide(0);
+      } else if (e.key === 'End') {
+        goToSlide(totalSlides - 1);
+      }
+    });
+
+    // Soporte táctil de deslizamiento (Swipe) en móvil
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+      if (viewMode !== 'slide') return;
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        nextSlide(); // Deslizar a la izquierda -> Siguiente
+      }
+      if (touchEndX > touchStartX + swipeThreshold) {
+        prevSlide(); // Deslizar a la derecha -> Anterior
+      }
+    }
+
+    // Inicialización al cargar la ventana
+    window.onload = function() {
+      renderSlide(0);
+    };
+  </script>
+</body>
+</html>
