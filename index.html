@@ -60,8 +60,9 @@
   <!-- BARRA SUPERIOR DE CONTROL (Identidad Doxus con borde inferior Amarillo Vibrante) -->
   <header class="h-16 bg-[#262a36] border-b-4 border-[#Ffbc06] px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-md">
     <div class="flex items-center gap-3">
-      <!-- Logotipo Fallback Doxus con fondo Amarillo y letra "D" en Negro -->
-      <div class="w-9 h-9 rounded-lg bg-[#Ffbc06] flex items-center justify-center font-black text-black text-lg shadow-sm">
+      <!-- Logotipo Doxus (logo.png) con respaldo fallback en caso de no encontrarse el archivo -->
+      <img src="logo.png" alt="Logo Doxus" class="h-9 w-auto object-contain rounded-lg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display: none;" class="w-9 h-9 rounded-lg bg-[#Ffbc06] items-center justify-center font-black text-black text-lg shadow-sm">
         D
       </div>
       <div>
